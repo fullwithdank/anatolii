@@ -1,3 +1,6 @@
+# Prerequisites
+*.d
+
 # Compiled Object files
 *.slo
 *.lo
@@ -15,6 +18,7 @@
 
 # Fortran module files
 *.mod
+*.smod
 
 # Compiled Static libraries
 *.lai
@@ -23,6 +27,28 @@
 *.lib
 
 # Executables
+*.dll
 *.exe
 *.out
 *.app
+*.enc
+
+# MSVC binary files
+*.db
+*.ipch
+*.suo
+*.tlog
+*.idb
+*.pdb
+*.ilk
+*.bsc
+*.sbr
+*.log
+*.opendb
+*.iobj
+*.ipdb
+*.xml
+*.lastcodeanalysissucceeded
+*.sqlite-journal
+*.sqlite
+*.json
