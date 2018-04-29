@@ -169,18 +169,15 @@ BaseWindow::BaseWindow(Vector2D vecPosition, Vector2D vecSize, CD3DFont* pUsedFo
 void BaseWindow::Render()
 {
     // Draw main background rectangle
-    g_Render.RectFilledGradient(this->vecPosition, this->vecPosition + this->vecSize, Color(50, 50, 50, 255),
-                                Color(20, 20, 20, 235), GradientType::GRADIENT_VERTICAL);
+    g_Render.RectFilled(this->vecPosition, this->vecPosition + this->vecSize, Color(50, 50, 50, 200));
 
     // Draw header rect.
-    g_Render.RectFilledGradient(this->vecPosition,
-                                Vector2D(this->vecPosition.x + this->vecSize.x,
-                                         this->vecPosition.y + this->iHeaderHeight), Color(50, 50, 50, 230),
-                                Color(35, 35, 35, 230), GradientType::GRADIENT_VERTICAL);
+    g_Render.RectFilled(this->vecPosition, Vector2D(this->vecPosition.x + this->vecSize.x, this->vecPosition.y + this->iHeaderHeight), 
+		Color(50, 50, 50, 200));
 
     // Draw header string, defined as label.
-    g_Render.String(this->vecPosition.x + (this->vecSize.x * 0.5f), this->vecPosition.y + (this->iHeaderHeight * 0.5f), CD3DFONT_CENTERED_X | CD3DFONT_CENTERED_Y,
-                    this->style.colHeaderText, this->pHeaderFont, this->strLabel.c_str());
+    g_Render.String(this->vecPosition.x + (this->vecSize.x * 0.5f), this->vecPosition.y + (this->iHeaderHeight * 0.5f), 
+		CD3DFONT_CENTERED_X | CD3DFONT_CENTERED_Y, this->style.colHeaderText, this->pHeaderFont, this->strLabel.c_str());
 
     // Render all childrens
     MenuMain::Render();
@@ -326,7 +323,7 @@ Checkbox::Checkbox(std::string strLabel, bool *bValue, MenuMain* pParent)
     this->bIsHovered     = false;
 
     this->vecSize           = { 100, this->pFont->flHeight };
-    this->vecSelectableSize = { std::roundf(this->pFont->flHeight * 0.70f), std::roundf(this->pFont->flHeight * 0.70f) };
+    this->vecSelectableSize = { std::roundf(this->pFont->flHeight * 1.0f), std::roundf(this->pFont->flHeight * 1.0f) };
     this->type              = MenuSelectableType::TYPE_CHECKBOX;
 }
 
@@ -335,9 +332,8 @@ void Checkbox::Render()
     /* Fill the inside of the button depending on activation */
     if (*this->bCheckboxValue)
     {
-        g_Render.RectFilledGradient(this->vecSelectablePosition, this->vecSelectablePosition + this->vecSelectableSize,
-                                    this->style.colCheckbox1, this->style.colCheckbox2,
-                                    GradientType::GRADIENT_VERTICAL);
+        g_Render.RectFilled(this->vecSelectablePosition, this->vecSelectablePosition + this->vecSelectableSize,
+                                    this->style.colCheckbox2);
     }
     else
         g_Render.RectFilled(this->vecSelectablePosition, this->vecSelectablePosition + this->vecSelectableSize, this->style.colCheckbox1);
@@ -394,10 +390,9 @@ Button::Button(std::string strLabel, void (&fnPointer)(), MenuMain* pParent, Vec
 void Button::Render()
 {
     /* Fill the body of the button */
-    g_Render.RectFilledGradient(this->vecPosition, this->vecPosition + this->vecSize, this->style.colCheckbox1,
-                                this->style.colCheckbox2, GradientType::GRADIENT_VERTICAL);
+	g_Render.RectFilled(this->vecPosition, this->vecPosition + this->vecSize, Color(50, 50, 50, 180));
     /* Button outline */
-    g_Render.Rect(this->vecPosition, this->vecPosition + this->vecSize, this->style.colSectionOutl);
+    //g_Render.RectFilled(this->vecPosition, this->vecPosition + this->vecSize, this->style.colSectionOutl);
 
     /* Text inside the button */
     g_Render.String(this->vecPosition.x + this->vecSize.x / 2.f, this->vecPosition.y + this->vecSize.y / 2.f,
@@ -480,8 +475,7 @@ void ComboBox::Render()
     }();
 
     /* Highlight combo if hovered */
-    if (this->bIsHovered)
-        g_Render.RectFilled(this->vecSelectablePosition, this->vecSelectablePosition + this->vecSelectableSize, Color(100, 100, 100, 50));
+    if (this->bIsHovered)g_Render.RectFilled(this->vecSelectablePosition, this->vecSelectablePosition + this->vecSelectableSize, Color(50, 50, 50, 50));
 
     g_Render.Rect(this->vecSelectablePosition, this->vecSelectablePosition + this->vecSelectableSize, this->style.colSectionOutl);
 
@@ -489,12 +483,11 @@ void ComboBox::Render()
     if (this->bIsActive)
     {
         /* Background square for the list */
-        g_Render.RectFilledGradient(Vector2D(this->vecSelectablePosition.x, this->vecSelectablePosition.y + this->vecSelectableSize.y),
-                                    Vector2D(this->vecSelectablePosition.x + this->vecSelectableSize.x,
-                                             this->vecSelectablePosition.y + this->vecSelectableSize.y * (this->vecSelectables.size() + 1)),
-                                    Color(40, 40, 40), Color(30, 30, 30), GRADIENT_VERTICAL);
+        g_Render.RectFilled(Vector2D(this->vecSelectablePosition.x, this->vecSelectablePosition.y + this->vecSelectableSize.y), 
+			Vector2D(this->vecSelectablePosition.x + this->vecSelectableSize.x, this->vecSelectablePosition.y + this->vecSelectableSize.y * (this->vecSelectables.size() + 1)),
+			Color(30, 30, 30));
 
-        const auto vecMid = this->vecSelectablePosition + (this->vecSelectableSize * 0.5f);
+		const auto vecMid = this->vecSelectablePosition + (this->vecSelectableSize * 0.5f);
 
         for (std::size_t it = 0; it < this->vecSelectables.size(); ++it)
             g_Render.String(Vector2D(vecMid.x, vecMid.y + this->vecSelectableSize.y * (it + 1)),
@@ -678,32 +671,30 @@ void Slider<T>::SetValue(T flValue)
 
 void MenuMain::Initialize()
 {
-    static int testint;
-    static int testint2;
-    static float float123 = 10.f;
-    static int testint3 = 2;
+	/* Dropdowns start at 0 */
     /* Create our main window (Could have multiple if you'd create vec. for it) */
-    auto mainWindow = std::make_shared<BaseWindow>(Vector2D(450, 450), Vector2D(360, 256), g_Fonts.pFontTahoma8.get(), g_Fonts.pFontTahoma10.get(), "Antario - Main");
-    {
-        auto sectMain = std::make_shared<BaseSection>(Vector2D(310, 100), 2, "Test Section 1");
-        {
-            sectMain->AddCheckBox("Bunnyhop Enabled", &g_Settings.bBhopEnabled);
-            sectMain->AddCheckBox("Show Player Names", &g_Settings.bShowNames);
-            sectMain->AddButton("Shutdown", Detach);
-            sectMain->AddSlider("TestSlider", &float123, 0, 20);
-            sectMain->AddSlider("intslider", &testint3, 0, 10);
-            sectMain->AddCombo("TestCombo", std::vector<std::string>{ "Value1", "Value2", "Value3" }, &testint);
-        }
-        mainWindow->AddChild(sectMain);
-        auto sectMain2 = std::make_shared<BaseSection>(Vector2D(310, 100), 2, "Test Section 2");
-        {
-            /* To be removed */
-            sectMain2->AddCombo("TestCombo2", std::vector<std::string>{ "ttest", "ttest2", "ttest3" }, &testint2);
-            sectMain2->AddCheckBox("CheckboxSect2_1", &g_Settings.bShowNames);
-            sectMain2->AddCheckBox("CheckboxSect2_2", &g_Settings.bShowNames);
-        }
-        mainWindow->AddChild(sectMain2);
-    }
+    auto mainWindow = std::make_shared<BaseWindow>(Vector2D(450, 450), Vector2D(360, 256), g_Fonts.pFontTahoma8.get(), g_Fonts.pFontTahoma10.get(), "Menu");
+	{
+		auto sectMain = std::make_shared<BaseSection>(Vector2D(310, 100), 2, "Menu");
+		{
+			sectMain->AddCheckBox("Bunnyhop Enabled", &g_Settings.bBhopEnabled);
+			sectMain->AddCheckBox("Show Player Names", &g_Settings.bShowNames);
+			sectMain->AddCheckBox("Show Player Weapons", &g_Settings.bShowWeapons);
+			sectMain->AddCheckBox("Show Player Boxes", &g_Settings.bShowBoxes);
+			sectMain->AddButton("Shutdown", Detach);
+			//sectMain->AddSlider("TestSlider", &float123, 0, 20);
+			//sectMain->AddSlider("intslider", &testint3, 0, 10);
+			//sectMain->AddCombo("TestCombo", std::vector<std::string>{ "Value1", "Value2", "Value3" }, &testint);
+		}
+		mainWindow->AddChild(sectMain);
+
+		auto sectMain2 = std::make_shared<BaseSection>(Vector2D(310, 100), 2, "Menu 2");
+		{
+			sectMain2->AddCombo("Colors", std::vector<std::string>{ "Normal", "Green", "Red", "Blue" }, &g_Settings.nCustomColors);
+			sectMain2->AddSlider("Fov", &g_Settings.nFovSlider, 90, 180);
+		}
+		mainWindow->AddChild(sectMain2);
+	}
     this->AddChild(mainWindow);
 
     this->mouseCursor = std::make_unique<MouseCursor>();    /* Create our mouse cursor (one instance only) */

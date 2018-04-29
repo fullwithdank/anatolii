@@ -31,10 +31,13 @@ public:
     bool  bCheatActive = true;
     bool  bMenuOpened  = false;
     bool  bBhopEnabled = true;
-    bool  bShowBoxes   = true;
+    bool  bShowBoxes   = false;
     bool  bShowNames   = true;
-    bool  bShowWeapons = true;
-    Color colCursor    = Color(0, 150, 255, 100);
+    bool  bShowWeapons = false;
+	int   nCustomColors= 0;
+	int   nFovSlider   = 90;
+
+    Color colCursor = Color(0, 150, 255, 100);
 };
 
 extern Settings g_Settings;

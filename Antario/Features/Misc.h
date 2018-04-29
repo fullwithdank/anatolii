@@ -20,8 +20,7 @@ private:
 
     void DoBhop() const
     {
-        if (!(this->pLocal->GetFlags() & EntityFlags::FL_ONGROUND) && this->pLocal->GetMoveType() != MoveType_t::
-            MOVETYPE_LADDER)
+        if (!(this->pLocal->GetFlags() & EntityFlags::FL_ONGROUND) && this->pLocal->GetMoveType() != MoveType_t::MOVETYPE_LADDER)
             if (this->pCmd->buttons & IN_JUMP)
                 this->pCmd->buttons &= ~IN_JUMP;
     }

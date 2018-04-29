@@ -10,7 +10,7 @@ void ESP::RenderBox(C_BaseEntity* pEnt)
     Vector vecBottom;
     Vector vecOrigin = vecBottom = pEnt->GetOrigin();
 
-    vecBottom.z += (pEnt->GetFlags() & FL_DUCKING) ? 54.f : 72.f;
+    vecBottom.z += (pEnt->GetFlags() & FL_DUCKING) ? 55.f : 74.f;
 
     Vector vecScreenBottom;
     if (!Utils::WorldToScreen(vecBottom, vecScreenBottom))
@@ -31,37 +31,58 @@ void ESP::RenderBox(C_BaseEntity* pEnt)
 
     /* Draw rect outline */
     //g_Render.Rect(sx - w - 1, sy - 1, sx + w + 1, sy + h + 1, Color::Black());
-    g_Render.Rect(sx - w + 1, sy + 1, sx + w - 1, sy + h - 1, Color::Black());
+    g_Render.Rect(sx - w + 1, sy + 1, sx + w - 1, sy + h - 1, Color::Grey());
 }
 
 void ESP::RenderName(C_BaseEntity* pEnt, int iterator)
 {
-    PlayerInfo_t pInfo;
-    g_pEngine->GetPlayerInfo(iterator, &pInfo);
+	Vector vecBottom; 
+	Vector vecOrigin = vecBottom = pEnt->GetOrigin(); 
 
+	PlayerInfo_t pInfo;
+	g_pEngine->GetPlayerInfo(iterator, &pInfo);
 
-    Vector vecPosition = pEnt->GetOrigin();
-    vecPosition.z += 75;
-    Vector vecScreenPos;
-    if (!Utils::WorldToScreen(vecPosition, vecScreenPos))
-        return;
+	vecBottom.z += (pEnt->GetFlags() & FL_DUCKING) ? 55.f : 74.f; //diff sizes when ppl crouch (cant use 80f for height cuz it re-breaks esp)
 
-    g_Render.String(vecScreenPos.x, vecScreenPos.y, CD3DFONT_CENTERED_X | CD3DFONT_DROPSHADOW, 
-		(localTeam == pEnt->GetTeam()) ? teamColor : enemyColor, 
-		g_Fonts.pFontTahoma10.get(), pInfo.szName);
+	Vector vecScreenBottom;
+	if (!Utils::WorldToScreen(vecBottom, vecScreenBottom))
+		return;
+
+	Vector vecScreenOrigin;
+	if (!Utils::WorldToScreen(vecOrigin, vecScreenOrigin))
+		return;
+
+	float sx = vecScreenOrigin.x;
+	float sy = vecScreenOrigin.y;
+	float h = vecScreenBottom.y - vecScreenOrigin.y;
+
+	g_Render.String(sx, sy + (h - 16) , CD3DFONT_CENTERED_X | CD3DFONT_DROPSHADOW, //pos&font
+		(localTeam == pEnt->GetTeam()) ? teamColor : enemyColor, //get team & color
+		g_Fonts.pFontTahoma10.get(), pInfo.szName); //font & name
 }
 
 void ESP::RenderWeaponName(C_BaseEntity* pEnt)
 {
+	Vector vecBottom;
+	Vector vecOrigin = vecBottom = pEnt->GetOrigin();
+
+	vecBottom.z += (pEnt->GetFlags() & FL_DUCKING) ? 55.f : 74.f;
+
+	Vector vecScreenBottom;
+	if (!Utils::WorldToScreen(vecBottom, vecScreenBottom))
+		return;
+
+	Vector vecScreenOrigin;
+	if (!Utils::WorldToScreen(vecOrigin, vecScreenOrigin))
+		return;
+
+	float sx = vecScreenOrigin.x;
+	float sy = vecScreenOrigin.y;
+	float h = vecScreenBottom.y - vecScreenOrigin.y;
+
     auto weapon = pEnt->GetActiveWeapon();
 
     if (!weapon)
-        return;
-
-    Vector vecPosition = pEnt->GetOrigin();
-    vecPosition.z += -2;
-    Vector vecScreenPos;
-    if (!Utils::WorldToScreen(vecPosition, vecScreenPos))
         return;
 
     std::string strWeaponName = weapon->GetName();
@@ -79,10 +100,9 @@ void ESP::RenderWeaponName(C_BaseEntity* pEnt)
         return tmp;
     };
 
-    g_Render.String(vecScreenPos.x, vecScreenPos.y,
-                    CD3DFONT_CENTERED_X | CD3DFONT_DROPSHADOW,
-                    (localTeam == pEnt->GetTeam()) ? teamColor : enemyColor,
-                    g_Fonts.pFontTahoma10.get(), stringToUpper(strWeaponName).c_str());
+    g_Render.String(sx, sy, CD3DFONT_CENTERED_X | CD3DFONT_DROPSHADOW, 
+		(localTeam == pEnt->GetTeam()) ? teamColor : enemyColor, 
+		g_Fonts.pFontTahoma10.get(), stringToUpper(strWeaponName).c_str());
 }
 
 void ESP::Render()
