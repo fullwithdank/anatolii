@@ -30,7 +30,7 @@ void ESP::RenderBox(C_BaseEntity* pEnt)
     g_Render.Rect(sx - w, sy, sx + w, sy + h, (pEnt->GetTeam() == localTeam) ? teamColor : enemyColor);
 
     /* Draw rect outline */
-    g_Render.Rect(sx - w - 1, sy - 1, sx + w + 1, sy + h + 1, Color::Black());
+    //g_Render.Rect(sx - w - 1, sy - 1, sx + w + 1, sy + h + 1, Color::Black());
     g_Render.Rect(sx - w + 1, sy + 1, sx + w - 1, sy + h - 1, Color::Black());
 }
 
@@ -40,16 +40,15 @@ void ESP::RenderName(C_BaseEntity* pEnt, int iterator)
     g_pEngine->GetPlayerInfo(iterator, &pInfo);
 
 
-    Vector vecPosition = pEnt->GetEyePosition();
-    vecPosition.z += 30;
+    Vector vecPosition = pEnt->GetOrigin();
+    vecPosition.z += 75;
     Vector vecScreenPos;
     if (!Utils::WorldToScreen(vecPosition, vecScreenPos))
         return;
 
-    g_Render.String(vecScreenPos.x, vecScreenPos.y,
-                    CD3DFONT_CENTERED_X | CD3DFONT_DROPSHADOW,
-                    (localTeam == pEnt->GetTeam()) ? teamColor : enemyColor,
-                    g_Fonts.pFontTahoma10.get(), pInfo.szName);
+    g_Render.String(vecScreenPos.x, vecScreenPos.y, CD3DFONT_CENTERED_X | CD3DFONT_DROPSHADOW, 
+		(localTeam == pEnt->GetTeam()) ? teamColor : enemyColor, 
+		g_Fonts.pFontTahoma10.get(), pInfo.szName);
 }
 
 void ESP::RenderWeaponName(C_BaseEntity* pEnt)
@@ -59,8 +58,8 @@ void ESP::RenderWeaponName(C_BaseEntity* pEnt)
     if (!weapon)
         return;
 
-    Vector vecPosition = pEnt->GetEyePosition();
-    vecPosition.z += 20;
+    Vector vecPosition = pEnt->GetOrigin();
+    vecPosition.z += -2;
     Vector vecScreenPos;
     if (!Utils::WorldToScreen(vecPosition, vecScreenPos))
         return;
@@ -85,7 +84,6 @@ void ESP::RenderWeaponName(C_BaseEntity* pEnt)
                     (localTeam == pEnt->GetTeam()) ? teamColor : enemyColor,
                     g_Fonts.pFontTahoma10.get(), stringToUpper(strWeaponName).c_str());
 }
-
 
 void ESP::Render()
 {
