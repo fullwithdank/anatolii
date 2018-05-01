@@ -40,7 +40,7 @@ void Hooks::Init()
     g_Hooks.pD3DDevice9Hook->Hook(vtable_indexes::present, Hooks::Present);
     g_Hooks.pClientModeHook->Hook(vtable_indexes::createMove, Hooks::CreateMove);
 
-	g_Hooks.pClientModeHook->Hook(vtable_indexes::fov, Hooks::fov); //hook the bastard
+	g_Hooks.pClientModeHook->Hook(vtable_indexes::getFov, Hooks::getFov); //hook the bastard
 
 
     // Create event listener, no need for it now so it will remain commented.
@@ -62,7 +62,7 @@ void Hooks::Restore()
         g_Hooks.pD3DDevice9Hook->Unhook(vtable_indexes::present);
         g_Hooks.pClientModeHook->Unhook(vtable_indexes::createMove);
 
-		g_Hooks.pClientModeHook->Unhook(vtable_indexes::fov); //unhook bastard
+		g_Hooks.pClientModeHook->Unhook(vtable_indexes::getFov); //unhook bastard
 
         SetWindowLongPtr(g_Hooks.hCSGOWindow, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(g_Hooks.pOriginalWNDProc));
     }
@@ -100,10 +100,14 @@ bool __fastcall Hooks::CreateMove(IClientMode* thisptr, void* edx, float sample_
     return false;
 }
 
-float _stdcall Hooks::fov(IClientMode* thisptr, CUserCmd* pCmd) //wtf am i doing 
+float _stdcall Hooks::getFov() //wtf am i doing 
 {
-	static auto oGetFov = g_Hooks.pClientModeHook->GetOriginal<fov_t>(vtable_indexes::fov);
-	oGetFov(thisptr, pCmd); //idk how to fix PLS aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+	static auto oGetFov = g_Hooks.pClientModeHook->GetOriginal<fov_t>(vtable_indexes::getFov);
+	if (g_pEngine->IsTakingScreenshot())
+		return oGetFov();
+	else
+		return oGetFov() + g_Settings.nFov;
+		//oGetFov IS IN FLOAT AND nFOV IS JUST INT ADDING TO FLOAT
 
 	// Call original createmove before we start screwing with it
 	//static auto oCreateMove = g_Hooks.pClientModeHook->GetOriginal<CreateMove_t>(24); // done
@@ -125,14 +129,6 @@ float _stdcall Hooks::fov(IClientMode* thisptr, CUserCmd* pCmd) //wtf am i doing
 	//engine_prediction::RunEnginePred();
 	// run shit in enginepred
 	//engine_prediction::EndEnginePred();
-
-	return oGetFov() + g_Settings.nFov; // return original fov (90) + settings fov (idk yet)
-
-	//static auto ofunc = ClientModeHook.get_original<GetViewmodelFOV>(Index::GetViewmodelFOV);
-	//if (g_EngineClient->IsTakingScreenshot())
-		//return ofunc();
-	//else
-		//return ofunc() + g_Options.MISC_ViewmodelFOV;
 }
 
 HRESULT __stdcall Hooks::Reset(IDirect3DDevice9* pDevice, D3DPRESENT_PARAMETERS* pPresentationParameters)

@@ -12,7 +12,7 @@ namespace vtable_indexes
 	constexpr auto reset        = 16;
 	constexpr auto present      = 17;
 	constexpr auto createMove   = 24;
-	constexpr auto fov          = 90; //fov thing???
+	constexpr auto getFov          = 90; //fov thing???
 }
 
 class VMTHook;
@@ -31,7 +31,7 @@ public:
     static HRESULT  __stdcall   Reset     (IDirect3DDevice9* pDevice, D3DPRESENT_PARAMETERS* pPresentationParameters);
     static HRESULT  __stdcall   Present   (IDirect3DDevice9* pDevice, const RECT *pSourceRect, const RECT *pDestRect, HWND hDestWindowOverride, const RGNDATA *pDirtyRegion);
     static LRESULT  __stdcall   WndProc   (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	static float    __stdcall   fov       (IClientMode*, CUserCmd*); //still idk
+	static float    __stdcall   getFov       (); //still idk
 
 private:
     /*---------------------------------------------*/
