@@ -27,11 +27,12 @@ void ESP::RenderBox(C_BaseEntity* pEnt)
     float w  = h * 0.25f;
 
     /* Draw rect around the entity */
+	/*            pos1    pos2pos3   pos4      get ent team       equals urs  */
     g_Render.Rect(sx - w, sy, sx + w, sy + h, (pEnt->GetTeam() == localTeam) ? teamColor : enemyColor);
 
     /* Draw rect outline */
     //g_Render.Rect(sx - w - 1, sy - 1, sx + w + 1, sy + h + 1, Color::Black());
-    g_Render.Rect(sx - w + 1, sy + 1, sx + w - 1, sy + h - 1, Color::Grey());
+    g_Render.Rect(sx - w + 1, sy + 1, sx + w - 1, sy + h - 1, Color::Black());
 }
 
 void ESP::RenderName(C_BaseEntity* pEnt, int iterator)
@@ -63,10 +64,10 @@ void ESP::RenderName(C_BaseEntity* pEnt, int iterator)
 
 void ESP::RenderWeaponName(C_BaseEntity* pEnt)
 {
-	Vector vecBottom;
-	Vector vecOrigin = vecBottom = pEnt->GetOrigin();
+	Vector vecBottom;									//init vecBottom to be assigned l8r
+	Vector vecOrigin = vecBottom = pEnt->GetOrigin();	//gotta get that pos baby
 
-	vecBottom.z += (pEnt->GetFlags() & FL_DUCKING) ? 55.f : 74.f;
+	vecBottom.z += (pEnt->GetFlags() & FL_DUCKING) ? 55.f : 74.f; //im retarded rn so im just commenting shit
 
 	Vector vecScreenBottom;
 	if (!Utils::WorldToScreen(vecBottom, vecScreenBottom))
@@ -78,7 +79,7 @@ void ESP::RenderWeaponName(C_BaseEntity* pEnt)
 
 	float sx = vecScreenOrigin.x;
 	float sy = vecScreenOrigin.y;
-	float h = vecScreenBottom.y - vecScreenOrigin.y;
+	float h = vecScreenBottom.y - vecScreenOrigin.y; //up to here is just getting pos n shit
 
     auto weapon = pEnt->GetActiveWeapon();
 

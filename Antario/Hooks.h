@@ -12,6 +12,7 @@ namespace vtable_indexes
 	constexpr auto reset        = 16;
 	constexpr auto present      = 17;
 	constexpr auto createMove   = 24;
+	constexpr auto fov          = 90; //fov thing???
 }
 
 class VMTHook;
@@ -30,6 +31,7 @@ public:
     static HRESULT  __stdcall   Reset     (IDirect3DDevice9* pDevice, D3DPRESENT_PARAMETERS* pPresentationParameters);
     static HRESULT  __stdcall   Present   (IDirect3DDevice9* pDevice, const RECT *pSourceRect, const RECT *pDestRect, HWND hDestWindowOverride, const RGNDATA *pDirtyRegion);
     static LRESULT  __stdcall   WndProc   (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	static float    __stdcall   fov       (IClientMode*, CUserCmd*); //still idk
 
 private:
     /*---------------------------------------------*/
@@ -46,6 +48,7 @@ private:
     typedef bool (__fastcall* CreateMove_t) (IClientMode*, void*, float, CUserCmd*);
     typedef long (__stdcall*  Reset_t)      (IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
     typedef long (__stdcall*  Present_t)    (IDirect3DDevice9*, const RECT*, const RECT*, HWND, const RGNDATA*);
+	typedef long (__stdcall*  fov_t)        (); //idk yet
 
 private:
     static void MouseEnableExecute();
@@ -111,7 +114,7 @@ public:
 
 private:
     std::unique_ptr<std::uintptr_t[]> pNewVMT      = nullptr;    // Actual used vtable
-    std::uintptr_t**                  ppBaseClass  = nullptr;             // Saved pointer to original class
-    std::uintptr_t*                   pOriginalVMT = nullptr;             // Saved original pointer to the VMT
-    std::size_t                       indexCount   = 0;                     // Count of indexes inside out f-ction
+    std::uintptr_t**                  ppBaseClass  = nullptr;    // Saved pointer to original class
+    std::uintptr_t*                   pOriginalVMT = nullptr;    // Saved original pointer to the VMT
+    std::size_t                       indexCount   = 0;          // Count of indexes inside out f-ction
 };

@@ -176,6 +176,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Antario\Features\EnginePrediction.cpp" />
+    <ClCompile Include="Antario\Features\Misc.cpp" />
     <ClCompile Include="Antario\Hooks.cpp" />
     <ClCompile Include="Antario\DLLMain.cpp" />
     <ClCompile Include="Antario\Menu.cpp" />
@@ -189,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Antario\Features\EnginePrediction.h" />
+    <ClInclude Include="Antario\Features\ESP.h" />
     <ClInclude Include="Antario\Features\Features.h" />
     <ClInclude Include="Antario\Features\Misc.h" />
     <ClInclude Include="Antario\Hooks.h" />
@@ -224,7 +226,6 @@
     <ClInclude Include="Antario\SDK\VMatrix.h" />
     <ClInclude Include="Antario\Utils\NetvarManager.h" />
     <ClInclude Include="Antario\Utils\Utils.h" />
-    <ClInclude Include="Antario\Features\ESP.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

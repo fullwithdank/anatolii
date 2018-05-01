@@ -48,6 +48,9 @@
     <ClCompile Include="Antario\Settings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Antario\Features\Misc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Antario\Hooks.h">
@@ -152,13 +155,13 @@
     <ClInclude Include="Antario\Menu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Antario\Features\ESP.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Antario\Utils\GlobalVars.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Antario\Features\Features.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Antario\Features\ESP.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

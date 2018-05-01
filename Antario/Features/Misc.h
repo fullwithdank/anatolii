@@ -1,19 +1,22 @@
 #pragma once
 #include "..\Utils\GlobalVars.h"
+#include "..\SDK\IClientMode.h"
 #include "..\Settings.h"
 
 class Misc
 {
 public:
-    void OnCreateMove()
-    {
-        this->pCmd   = g::pCmd;
-        this->pLocal = g::pLocalEntity;
+	void Fov();
 
-        if (g_Settings.bBhopEnabled)
-            this->DoBhop();
-        // sum future shit
-    };
+	void OnCreateMove()
+	{
+		this->pCmd = g::pCmd;
+		this->pLocal = g::pLocalEntity;
+
+		if (g_Settings.bBhopEnabled)
+			this->DoBhop();
+		// sum future shit
+	};
 private:
     CUserCmd*     pCmd;
     C_BaseEntity* pLocal;

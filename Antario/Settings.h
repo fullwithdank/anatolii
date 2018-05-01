@@ -35,7 +35,7 @@ public:
     bool  bShowNames   = true;
     bool  bShowWeapons = false;
 	int   nCustomColors= 0;
-	int   nFovSlider   = 90;
+	int   nFov         = 0; //def fov value (to be added to original)
 
     Color colCursor = Color(0, 150, 255, 100);
 };

@@ -34,7 +34,7 @@ public:
     __int32   height;             //0x0018 
     __int32   height_old;         //0x001C 
     char      pad_0x0020[0x90];   //0x0020
-    float     fov;                //0x00B0 
+	float     fov = 120;          //0x00B0 
     float     viewmodel_fov;      //0x00B4 
     Vector    origin;             //0x00B8 
     Vector    angles;             //0x00C4 
@@ -42,7 +42,7 @@ public:
 
 };//Size=0x014C
 
-class IClientMode
+class IClientMode //references Interfaces.cpp's global interface
 {
 public:
     virtual             ~IClientMode() {}
@@ -70,4 +70,5 @@ public:
     virtual void        LevelInit(const char *newmap) = 0;
     virtual void        LevelShutdown(void) = 0;
 };
+
 extern IClientMode* g_pClientMode;

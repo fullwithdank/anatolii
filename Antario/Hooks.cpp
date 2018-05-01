@@ -40,6 +40,8 @@ void Hooks::Init()
     g_Hooks.pD3DDevice9Hook->Hook(vtable_indexes::present, Hooks::Present);
     g_Hooks.pClientModeHook->Hook(vtable_indexes::createMove, Hooks::CreateMove);
 
+	g_Hooks.pClientModeHook->Hook(vtable_indexes::fov, Hooks::fov); //hook the bastard
+
 
     // Create event listener, no need for it now so it will remain commented.
     //const std::vector<const char*> vecEventNames = { "" };
@@ -59,6 +61,9 @@ void Hooks::Restore()
         g_Hooks.pD3DDevice9Hook->Unhook(vtable_indexes::reset);
         g_Hooks.pD3DDevice9Hook->Unhook(vtable_indexes::present);
         g_Hooks.pClientModeHook->Unhook(vtable_indexes::createMove);
+
+		g_Hooks.pClientModeHook->Unhook(vtable_indexes::fov); //unhook bastard
+
         SetWindowLongPtr(g_Hooks.hCSGOWindow, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(g_Hooks.pOriginalWNDProc));
     }
     Utils::Log("Unhooking succeded!");
@@ -95,6 +100,40 @@ bool __fastcall Hooks::CreateMove(IClientMode* thisptr, void* edx, float sample_
     return false;
 }
 
+float _stdcall Hooks::fov(IClientMode* thisptr, CUserCmd* pCmd) //wtf am i doing 
+{
+	static auto oGetFov = g_Hooks.pClientModeHook->GetOriginal<fov_t>(vtable_indexes::fov);
+	oGetFov(thisptr, pCmd); //idk how to fix PLS aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+	// Call original createmove before we start screwing with it
+	//static auto oCreateMove = g_Hooks.pClientModeHook->GetOriginal<CreateMove_t>(24); // done
+	//oCreateMove(thisptr, edx, sample_frametime, pCmd); // define shit?
+
+	//if (!pCmd || !pCmd->command_number)
+		//return oCreateMove;
+
+	// Get globals
+	//g::pCmd = pCmd;
+	//g::pLocalEntity = g_pEntityList->GetClientEntity(g_pEngine->GetLocalPlayer());
+	//if (!g::pLocalEntity)
+		//return false;
+
+
+	//g_Misc.OnCreateMove();
+	// run shit outside enginepred
+
+	//engine_prediction::RunEnginePred();
+	// run shit in enginepred
+	//engine_prediction::EndEnginePred();
+
+	return oGetFov() + g_Settings.nFov; // return original fov (90) + settings fov (idk yet)
+
+	//static auto ofunc = ClientModeHook.get_original<GetViewmodelFOV>(Index::GetViewmodelFOV);
+	//if (g_EngineClient->IsTakingScreenshot())
+		//return ofunc();
+	//else
+		//return ofunc() + g_Options.MISC_ViewmodelFOV;
+}
 
 HRESULT __stdcall Hooks::Reset(IDirect3DDevice9* pDevice, D3DPRESENT_PARAMETERS* pPresentationParameters)
 {
@@ -136,7 +175,7 @@ HRESULT __stdcall Hooks::Present(IDirect3DDevice9* pDevice, const RECT* pSourceR
             g_Render.SetupRenderStates(); // Sets up proper render states for our state block
             g_Hooks.MouseEnableExecute(); // Handles in-game cursor
 
-            std::string szWatermark = "Antario";
+            std::string szWatermark = "croatiahook v2";
             g_Render.String(8, 8, CD3DFONT_DROPSHADOW, Color(250, 150, 200, 180), g_Fonts.pFontTahoma8.get(),
                             szWatermark.c_str());
 
@@ -148,6 +187,7 @@ HRESULT __stdcall Hooks::Present(IDirect3DDevice9* pDevice, const RECT* pSourceR
 
             // Put your draw calls here
             g_ESP.Render();
+			//g_Misc.Render();
         }
     }();
 

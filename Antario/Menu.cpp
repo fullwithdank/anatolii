@@ -691,7 +691,7 @@ void MenuMain::Initialize()
 		auto sectMain2 = std::make_shared<BaseSection>(Vector2D(310, 100), 2, "Menu 2");
 		{
 			sectMain2->AddCombo("Colors", std::vector<std::string>{ "Normal", "Green", "Red", "Blue" }, &g_Settings.nCustomColors);
-			sectMain2->AddSlider("Fov", &g_Settings.nFovSlider, 90, 180);
+			sectMain2->AddSlider("Fov", &g_Settings.nFov, 0, 60);
 		}
 		mainWindow->AddChild(sectMain2);
 	}
