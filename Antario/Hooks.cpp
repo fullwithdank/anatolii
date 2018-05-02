@@ -2,11 +2,12 @@
 #include "Hooks.h"
 #include "Utils\Utils.h"
 #include "Features\Features.h"
+#include "SDK\IClientMode.h"
 
 Misc     g_Misc;
 Hooks    g_Hooks;
 Settings g_Settings;
-
+CViewSetup g_CViewSetup; //to allow fov shit
 
 void Hooks::Init()
 {
@@ -40,7 +41,7 @@ void Hooks::Init()
     g_Hooks.pD3DDevice9Hook->Hook(vtable_indexes::present, Hooks::Present);
     g_Hooks.pClientModeHook->Hook(vtable_indexes::createMove, Hooks::CreateMove);
 
-	g_Hooks.pClientModeHook->Hook(vtable_indexes::getFov, Hooks::getFov); //hook the bastard
+	g_Hooks.pClientModeHook->Hook(vtable_indexes::overrideFov, Hooks::OverrideFov); //hook the bastard
 
 
     // Create event listener, no need for it now so it will remain commented.
@@ -62,7 +63,7 @@ void Hooks::Restore()
         g_Hooks.pD3DDevice9Hook->Unhook(vtable_indexes::present);
         g_Hooks.pClientModeHook->Unhook(vtable_indexes::createMove);
 
-		g_Hooks.pClientModeHook->Unhook(vtable_indexes::getFov); //unhook bastard
+		//g_Hooks.pClientModeHook->Unhook(vtable_indexes::OverrideFov); //unhook bastard
 
         SetWindowLongPtr(g_Hooks.hCSGOWindow, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(g_Hooks.pOriginalWNDProc));
     }
@@ -100,35 +101,15 @@ bool __fastcall Hooks::CreateMove(IClientMode* thisptr, void* edx, float sample_
     return false;
 }
 
-float _stdcall Hooks::getFov() //wtf am i doing 
+void __fastcall Hooks::OverrideFov(void* ecx, void* edx, CViewSetup* pSetup/*, C_BaseEntity* pEnt*/)
 {
-	static auto oGetFov = g_Hooks.pClientModeHook->GetOriginal<fov_t>(vtable_indexes::getFov);
-	if (g_pEngine->IsTakingScreenshot())
-		return oGetFov();
-	else
-		return oGetFov() + g_Settings.nFov;
-		//oGetFov IS IN FLOAT AND nFOV IS JUST INT ADDING TO FLOAT
+	C_BaseEntity* localplayer1 = g_pEntityList->GetClientEntity(g_pEngine->GetLocalPlayer());
 
-	// Call original createmove before we start screwing with it
-	//static auto oCreateMove = g_Hooks.pClientModeHook->GetOriginal<CreateMove_t>(24); // done
-	//oCreateMove(thisptr, edx, sample_frametime, pCmd); // define shit?
-
-	//if (!pCmd || !pCmd->command_number)
-		//return oCreateMove;
-
-	// Get globals
-	//g::pCmd = pCmd;
-	//g::pLocalEntity = g_pEntityList->GetClientEntity(g_pEngine->GetLocalPlayer());
-	//if (!g::pLocalEntity)
-		//return false;
-
-
-	//g_Misc.OnCreateMove();
-	// run shit outside enginepred
-
-	//engine_prediction::RunEnginePred();
-	// run shit in enginepred
-	//engine_prediction::EndEnginePred();
+	//if (!g::pLocalEntity || !g_pEngine->IsInGame())
+		//return;
+	//if (!g_pEngine->IsConnected)
+	g_Settings.nFov = pSetup->fov;
+	g_CViewSetup
 }
 
 HRESULT __stdcall Hooks::Reset(IDirect3DDevice9* pDevice, D3DPRESENT_PARAMETERS* pPresentationParameters)

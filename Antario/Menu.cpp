@@ -614,7 +614,7 @@ void Slider<T>::Render()
     if (this->flButtonPosX - 2 > this->vecSelectablePosition.x + 1)
         g_Render.RectFilledGradient(this->vecSelectablePosition + 1,
                                     Vector2D(this->flButtonPosX - 2, this->vecSelectablePosition.y + this->vecSelectableSize.y),
-                                    Color(200, 0, 100), Color(255, 0, 100), GradientType::GRADIENT_HORIZONTAL);
+                                    Color(195, 240, 100, 200), Color(195, 240, 150, 200), GradientType::GRADIENT_HORIZONTAL);
 ///TODO: Make colors not hardcoded + smaller slider.
 }
 
@@ -690,8 +690,8 @@ void MenuMain::Initialize()
 
 		auto sectMain2 = std::make_shared<BaseSection>(Vector2D(310, 100), 2, "Menu 2");
 		{
-			sectMain2->AddCombo("Colors", std::vector<std::string>{ "Normal", "Green", "Red", "Blue" }, &g_Settings.nCustomColors);
-			sectMain2->AddSlider("Fov", &g_Settings.nFov, 0, 60);
+			sectMain2->AddSlider("Fov", &g_Settings.nFov, 90, 180);
+			sectMain2->AddSlider("Viewmodel Fov", &g_Settings.nViewmodelFov, 0, 60);
 		}
 		mainWindow->AddChild(sectMain2);
 	}

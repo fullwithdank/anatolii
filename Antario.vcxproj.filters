@@ -48,9 +48,6 @@
     <ClCompile Include="Antario\Settings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Antario\Features\Misc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Antario\Hooks.h">

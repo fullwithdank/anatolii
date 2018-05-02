@@ -22,7 +22,8 @@ enum class MotionBlurMode_t
     MOTION_BLUR_SFM = 3
 };
 
-class CViewSetup
+class CViewSetup /* this bastard is an array that i hate and those offsets 
+                 are every other array slot fucking killmself lmao */
 {
 public:
     __int32   x;                  //0x0000 
@@ -34,8 +35,8 @@ public:
     __int32   height;             //0x0018 
     __int32   height_old;         //0x001C 
     char      pad_0x0020[0x90];   //0x0020
-	float     fov = 120;          //0x00B0 
-    float     viewmodel_fov;      //0x00B4 
+	float     fov;                //0x00B0 u see ivan this is ur fov 
+    float     viewmodel_fov;      //0x00B4 but idk if it works :/
     Vector    origin;             //0x00B8 
     Vector    angles;             //0x00C4 
     char      pad_0x00D0[0x7C];   //0x00D0

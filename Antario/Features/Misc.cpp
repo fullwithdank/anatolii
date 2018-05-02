@@ -3,6 +3,3 @@
 #include "..\SDK\IVEngineClient.h"
 #include "..\SDK\PlayerInfo.h"
 
-void Misc::Fov()
-{
-}

@@ -35,7 +35,8 @@ public:
     bool  bShowNames   = true;
     bool  bShowWeapons = false;
 	int   nCustomColors= 0;
-	int nFov         = 0; //def fov value (to be added to original)
+	int   nFov         = 90; //def fov value 
+	int   nViewmodelFov= 0;  //mayb i can use same method :o
 
     Color colCursor = Color(0, 150, 255, 100);
 };

@@ -6,8 +6,6 @@
 class Misc
 {
 public:
-	void Fov();
-
 	void OnCreateMove()
 	{
 		this->pCmd = g::pCmd;
