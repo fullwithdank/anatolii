@@ -12,11 +12,14 @@ namespace vtable_indexes
 	constexpr auto reset        = 16;
 	constexpr auto present      = 17;
 	constexpr auto createMove   = 24;
-	constexpr auto overrideFov  = 90;  //fov thing???
+	constexpr auto PlaySound    = 82;
+	constexpr auto overrideFov  = 18;  //fov thing???
+	//constexpr auto overrideViewmodelFov = 35;
 	//constexpr auto getViewmodelFov = 35;
 }
 
 class VMTHook;
+
 class Hooks
 {
 public:
@@ -32,7 +35,7 @@ public:
     static HRESULT  __stdcall   Reset     (IDirect3DDevice9* pDevice, D3DPRESENT_PARAMETERS* pPresentationParameters);
     static HRESULT  __stdcall   Present   (IDirect3DDevice9* pDevice, const RECT *pSourceRect, const RECT *pDestRect, HWND hDestWindowOverride, const RGNDATA *pDirtyRegion);
     static LRESULT  __stdcall   WndProc   (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	static void     __fastcall  OverrideFov(void* ecx, void* edx, CViewSetup* pSetup);
+    //static void     __fastcall  OverrideFov(void* ecx, void* edx, CViewSetup* pSetup); cuz offsets crash csgo 
 
 private:
     /*---------------------------------------------*/
@@ -41,6 +44,8 @@ private:
 
     std::unique_ptr<VMTHook> pD3DDevice9Hook;
     std::unique_ptr<VMTHook> pClientModeHook;
+
+	//extern VMTHook VGUISurfaceHook;
 
     /*---------------------------------------------*/
     /*-------------Hook prototypes-----------------*/
